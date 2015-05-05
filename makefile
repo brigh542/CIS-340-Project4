@@ -1,47 +1,39 @@
 CC = gcc
+
 CFLAGS = -std=gnu99 -Wall -g -c
-EXECS = main help showfat showsector structure traverse
+
+EXECS = server client
+
+
 
 all: $(EXECS)
 
-main: main.o flop.o
-	$(CC) main.o flop.o -o main
 
-main.o: main.c
-	$(CC) $(CFLAGS) main.c
 
-flop.o: flop.c flop.h
-	$(CC) $(CFLAGS) flop.c
+server: server.o
 
-help: help.o
-	$(CC) help.o -o help
+	$(CC) server.o -o server
 
-help.o: help.c
-	$(CC) $(CFLAGS) help.c
 
-showfat: showfat.o
-	$(CC) showfat.o -o showfat
 
-showfat.o: showfat.c
-	$(CC) $(CFLAGS) showfat.c
+server.o: server.c
 
-showsector: showsector.o
-	$(CC) showsector.o -o showsector
+	$(CC) $(CFLAGS) server.c
 
-showsector.o: showsector.c
-	$(CC) $(CFLAGS) showsector.c
 
-structure: structure.o
-	$(CC) structure.o -o structure
 
-structure.o: structure.c
-	$(CC) $(CFLAGS) structure.c
+client: client.o 
 
-traverse: traverse.o
-	$(CC) traverse.o -o traverse
+	$(CC) client.o -o client
 
-traverse.o: traverse.c
-	$(CC) $(CFLAGS) traverse.c
+
+
+client.o: client.c
+
+	$(CC) $(CFLAGS) client.c
+
+
 
 clean:
+
 	$(RM) *.o $(EXECS)
