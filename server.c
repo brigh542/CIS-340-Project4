@@ -117,7 +117,7 @@ while(1){
    if ((connect = recvfrom(fd,&msg,sizeof(msg),0,(struct sockaddr *)&cli_addr,&fsize)) < 0){
    	perror("error recvfrom");
    }
-   printf("%s:%d >>> %s\n", inet_ntoa(cli_addr.sin_addr), htons(cli_addr.sin_port), msg.data);
+   printf(msg.data);
    if(strcmp("showsector",msg.data) == 0){
       //sendto(fd,msg.data,strlen(msg.data),0,
 
