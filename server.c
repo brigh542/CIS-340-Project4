@@ -38,19 +38,15 @@ int main(int argc, char **argv){
 
 struct Message{
 
-	char *cmd;
-
-	char *seq;
-
-	char *number;
-
 	char data[512];
+	char sector[30];
+        int uuid;
 
-	};
+	} msg;
 
 struct sockaddr_in serv_addr,cli_addr;
 
-struct Message *msg = malloc(sizeof(struct Message));
+//struct Message *msg = malloc(sizeof(struct Message));
 
 int fd, connect, floppy,fsize;
 
@@ -90,7 +86,7 @@ bzero(&serv_addr,sizeof(serv_addr));
 
    serv_addr.sin_addr.s_addr=htonl(INADDR_ANY);
 
-   serv_addr.sin_port=htons(32000);
+   serv_addr.sin_port=htons(696969);
 
 
 
@@ -104,28 +100,35 @@ bzero(&serv_addr,sizeof(serv_addr));
 
 
 
-  if((floppy = open("./imagefile.img", O_RDONLY)) < 0){
+  if((floppy = open(argv[1], O_RDONLY)) < 0){
 
       perror("imagefile not mounted");
 
   }
 
 
-
+ listen(fd, 1);
+while(1){
 
    fsize = sizeof(cli_addr);
+   bzero((char *)msg.data,512);
+   bzero((char *)msg.data,512);
 
-   connect = recvfrom(fd,msg,sizeof(*msg),0,(struct sockaddr *)&cli_addr,&fsize);
-   
-
-   if(connect < 0){
-
-   perror("error recvfrom");
-
-   return 0;
-
+   if ((connect = recvfrom(fd,&msg,sizeof(msg),0,(struct sockaddr *)&cli_addr,&fsize)) < 0){
+   	perror("error recvfrom");
    }
-   printf(msg);
+   printf("%s:%d >>> %s\n", inet_ntoa(cli_addr.sin_addr), htons(cli_addr.sin_port), msg.data);
+   if(strcmp("showsector",msg.data) == 0){
+      //sendto(fd,msg.data,strlen(msg.data),0,
+
+             //(struct sockaddr *)&serv_addr,sizeof(serv_addr));
+      bzero((char *)msg.data,512);
+}
+	if(strcmp("DISCONNECT",msg.data) == 0){
+		printf("Disconnected from client");
+      bzero((char *)msg.data,512);
+}
+}
 
 
 close(fd);
